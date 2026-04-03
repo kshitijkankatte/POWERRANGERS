@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sahanak — Your Health, Guided.</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="app" class="app-container">
+        <!-- Screens will be injected here -->
+        <main id="screen-container"></main>
+        
+        <!-- Navigation Bar (Visible only after login) -->
+        <nav id="main-nav" class="hidden">
+            <button id="nav-home" aria-label="Home">🏠</button>
+            <button id="nav-history" aria-label="History">📋</button>
+            <button id="nav-profile" aria-label="Profile">👤</button>
+        </nav>
+
+        <!-- Global Disclaimer (Shown on Results Screen) -->
+        <div id="global-disclaimer" class="hidden">
+            <p><strong>Disclaimer:</strong> Sahanak is an AI awareness tool, not a medical professional. This is not a diagnosis. In case of emergency, call local emergency services immediately.</p>
+        </div>
+    </div>
+
+    <!-- Screen Templates (Hidden) -->
+    <template id="tmpl-home">
+        <section class="screen splash">
+            <h1 class="app-title">Sahanak</h1>
+            <p class="tagline">Your health, guided.</p>
+            <div class="auth-buttons">
+                <button class="btn btn-primary" id="btn-goto-login">Login</button>
+                <button class="btn btn-secondary" id="btn-goto-signup">Sign Up</button>
+            </div>
+        </section>
+    </template>
+
+    <template id="tmpl-login">
+        <section class="screen">
+            <h2 class="h-font">Welcome Back</h2>
+            <form id="form-login" class="card">
+                <div class="input-group">
+                    <label for="login-username">Username</label>
+                    <input type="text" id="login-username" required>
+                </div>
+                <div class="input-group">
+                    <label for="login-password">Password</label>
+                    <input type="password" id="login-password" required>
+                </div>
+                <button type="submit" class="btn btn-primary full-width">Login</button>
+                <p class="text-center mt-1">Don't have an account? <a href="#" id="link-signup">Sign Up</a></p>
+            </form>
+        </section>
+    </template>
+
+    <template id="tmpl-signup">
+        <section class="screen">
+            <h2 class="h-font">Join Sahanak</h2>
+            <form id="form-signup" class="card">
+                <div id="signup-steps">
+                    <!-- Steps will be toggled by JS if needed, but a clean form is requested -->
+                    <div class="input-group">
+                        <label for="signup-name">Full Name</label>
+                        <input type="text" id="signup-name" required>
+                    </div>
+                    <div class="flex-row">
+                        <div class="input-group">
+                            <label for="signup-gender">Gender</label>
+                            <select id="signup-gender" required>
+                                <option value="">Select...</option>
+                                <option value="Male">Male</option>
+                                <option value="Female">Female</option>
+                                <option value="Other">Other</option>
+                            </select>
+                        </div>
+                        <div class="input-group">
+                            <label for="signup-age">Age</label>
+                            <input type="number" id="signup-age" required>
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <label for="signup-location">Location (City/Area)</label>
+                        <input type="text" id="signup-location" placeholder="e.g. Mumbai, India" required>
+                    </div>
+                    <div class="input-group">
+                        <label for="signup-allergies">Known Allergies</label>
+                        <textarea id="signup-allergies" placeholder="e.g. Penicillin, Peanuts"></textarea>
+                    </div>
+                    <div class="input-group">
+                        <label for="signup-history">Medical History</label>
+                        <textarea id="signup-history" placeholder="e.g. Diabetes, Hypertension"></textarea>
+                    </div>
+                    <div class="input-group">
+                        <label for="signup-username">Create Username</label>
+                        <input type="text" id="signup-username" required>
+                    </div>
+                    <div class="input-group">
+                        <label for="signup-password">Create Password</label>
+                        <input type="password" id="signup-password" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary full-width">Continue to Symptom Check →</button>
+                </div>
+            </form>
+        </section>
+    </template>
+
+    <template id="tmpl-symptoms">
+        <section class="screen">
+            <h2 class="h-font">What are you experiencing?</h2>
+            <div class="symptom-picker card">
+                <div id="symptom-chips" class="chip-container">
+                    <!-- Chips will be generated by JS -->
+                </div>
+                <div class="input-group mt-1">
+                    <label>Other symptoms?</label>
+                    <textarea id="symptom-other" placeholder="Describe how you feel..."></textarea>
+                </div>
+                <button class="btn btn-primary full-width mt-1" id="btn-assess">Assess My Symptoms →</button>
+            </div>
+        </section>
+    </template>
+
+    <template id="tmpl-results">
+        <section class="screen results">
+            <div id="result-status-card">
+                <!-- Urgency card (Red/Yellow/Green) -->
+            </div>
+            <div id="result-message" class="friendly-msg">
+                <!-- Friendly AI message -->
+            </div>
+            
+            <div class="result-details">
+                <div class="result-card" id="card-conditions">
+                    <h3>Possible Indicators</h3>
+                    <p id="res-conditions"></p>
+                </div>
+                <div class="result-card" id="card-specialist">
+                    <h3>Recommended Specialist</h3>
+                    <p id="res-specialist"></p>
+                    <a id="res-map-link" href="#" target="_blank" class="btn btn-outline small">Find nearest</a>
+                </div>
+                <div class="result-card" id="card-remedies">
+                    <h3>Home Remedies</h3>
+                    <ul id="res-remedies"></ul>
+                </div>
+                <div class="result-card" id="card-avoid">
+                    <h3>What to Avoid</h3>
+                    <ul id="res-avoid"></ul>
+                </div>
+                <div class="result-card" id="card-warning">
+                    <h3>🔴 Warning Signs</h3>
+                    <p id="res-warning"></p>
+                </div>
+            </div>
+            <button class="btn btn-secondary full-width mt-1" id="btn-done">Done</button>
+        </section>
+    </template>
+
+    <template id="tmpl-history">
+        <section class="screen">
+            <h2 class="h-font">Symptom History</h2>
+            <div id="history-list" class="list-container">
+                <!-- History items here -->
+            </div>
+            <p id="history-empty" class="text-center hidden">No history yet.</p>
+        </section>
+    </template>
+
+    <script src="app.js"></script>
+</body>
+</html>
